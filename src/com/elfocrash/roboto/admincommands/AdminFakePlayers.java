@@ -32,7 +32,8 @@ public class AdminFakePlayers implements IAdminCommandHandler
 		return ADMIN_COMMANDS;
 	}
 	
-	private void showFakeDashboard(Player activeChar) {
+	private void showFakeDashboard(Player activeChar)
+	{
 		final NpcHtmlMessage html = new NpcHtmlMessage(0);
 		html.setFile(fakesFolder + "index.htm");
 		html.replace("%fakecount%", FakePlayerManager.INSTANCE.getFakePlayersCount());
@@ -44,54 +45,59 @@ public class AdminFakePlayers implements IAdminCommandHandler
 	public boolean useAdminCommand(String command, Player activeChar)
 	{
 		if (command.startsWith("admin_fakes"))
-		{
 			showFakeDashboard(activeChar);
-		}
 		
-		if(command.startsWith("admin_deletefake")) {
-			if(activeChar.getTarget() != null && activeChar.getTarget() instanceof FakePlayer) {
+		if (command.startsWith("admin_deletefake"))
+		{
+			if (activeChar.getTarget() != null && activeChar.getTarget() instanceof FakePlayer)
+			{
 				FakePlayer fakePlayer = (FakePlayer)activeChar.getTarget();
 				fakePlayer.despawnPlayer();
 			}
 		}
 		
-		if(command.startsWith("admin_spawnenchanter")) {
+		if (command.startsWith("admin_spawnenchanter"))
+		{
 			FakePlayer fakePlayer = FakePlayerManager.INSTANCE.spawnPlayer(activeChar.getX(),activeChar.getY(),activeChar.getZ());
 			fakePlayer.setFakeAi(new EnchanterAI(fakePlayer));
 		}
 		
-		if (command.startsWith("admin_spawnrandom")) {
-			FakePlayer fakePlayer = FakePlayerManager.INSTANCE.spawnPlayer(activeChar.getX(),activeChar.getY(),activeChar.getZ());
+		if (command.startsWith("admin_spawnrandom"))
+		{
+			FakePlayer fakePlayer = FakePlayerManager.INSTANCE.spawnPlayer(activeChar.getX(), activeChar.getY(), activeChar.getZ());
 			fakePlayer.assignDefaultAI();
-			if(command.contains(" ")) {
+			if (command.contains(" "))
+			{
 				String arg = command.split(" ")[1];
-				if(arg.equalsIgnoreCase("htm")) {
+				if (arg.equalsIgnoreCase("htm"))
 					showFakeDashboard(activeChar);
-				}
 			}
-		}		
+		}
+		
 		if (command.startsWith("admin_takecontrol"))
 		{
-			if(activeChar.getTarget() != null && activeChar.getTarget() instanceof FakePlayer) {
+			if (activeChar.getTarget() != null && activeChar.getTarget() instanceof FakePlayer)
+			{
 				FakePlayer fakePlayer = (FakePlayer)activeChar.getTarget();
 				fakePlayer.setUnderControl(true);
 				activeChar.setPlayerUnderControl(fakePlayer);
 				activeChar.sendMessage("You are now controlling: " + fakePlayer.getName());
-			}else {
-				activeChar.sendMessage("You can only take control of a Fake Player");
 			}
+			else
+				activeChar.sendMessage("You can only take control of a Fake Player");
 		}
+		
 		if (command.startsWith("admin_releasecontrol"))
 		{
-			if(activeChar.isControllingFakePlayer()) {
+			if (activeChar.isControllingFakePlayer())
+			{
 				FakePlayer fakePlayer = activeChar.getPlayerUnderControl();
 				activeChar.sendMessage("You are no longer controlling: " + fakePlayer.getName());
 				fakePlayer.setUnderControl(false);
 				activeChar.setPlayerUnderControl(null);
-				
-			}else {
-				activeChar.sendMessage("You are not controlling a Fake Player");
 			}
+			else
+				activeChar.sendMessage("You are not controlling a Fake Player");
 		}
 		return true;
 	}
